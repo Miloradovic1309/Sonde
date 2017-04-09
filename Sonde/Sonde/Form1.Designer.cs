@@ -72,14 +72,14 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel9 = new System.Windows.Forms.Panel();
             this.tbGraphics = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel14 = new System.Windows.Forms.Panel();
+            this.panel13 = new System.Windows.Forms.Panel();
+            this.panel15 = new System.Windows.Forms.Panel();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel13 = new System.Windows.Forms.Panel();
-            this.panel14 = new System.Windows.Forms.Panel();
-            this.panel15 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tpHome.SuspendLayout();
@@ -441,6 +441,7 @@
             this.bShowGrapic.TabIndex = 15;
             this.bShowGrapic.Text = "Prikaz grafika";
             this.bShowGrapic.UseVisualStyleBackColor = true;
+            this.bShowGrapic.Click += new System.EventHandler(this.bShowGrapic_Click);
             // 
             // bStart
             // 
@@ -688,24 +689,6 @@
             this.tbGraphics.Text = "Grafici";
             this.tbGraphics.UseVisualStyleBackColor = true;
             // 
-            // tpSettings
-            // 
-            this.tpSettings.Location = new System.Drawing.Point(4, 25);
-            this.tpSettings.Name = "tpSettings";
-            this.tpSettings.Size = new System.Drawing.Size(968, 662);
-            this.tpSettings.TabIndex = 1;
-            this.tpSettings.Text = "Podešavanja";
-            this.tpSettings.UseVisualStyleBackColor = true;
-            // 
-            // timer1
-            // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // timer2
-            // 
-            this.timer2.Interval = 250;
-            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
-            // 
             // tableLayoutPanel10
             // 
             this.tableLayoutPanel10.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -741,16 +724,6 @@
             this.tableLayoutPanel11.Size = new System.Drawing.Size(956, 585);
             this.tableLayoutPanel11.TabIndex = 0;
             // 
-            // panel13
-            // 
-            this.panel13.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel13.Location = new System.Drawing.Point(33, 3);
-            this.panel13.Name = "panel13";
-            this.panel13.Size = new System.Drawing.Size(920, 559);
-            this.panel13.TabIndex = 0;
-            // 
             // panel14
             // 
             this.panel14.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -761,6 +734,16 @@
             this.panel14.Size = new System.Drawing.Size(24, 559);
             this.panel14.TabIndex = 1;
             // 
+            // panel13
+            // 
+            this.panel13.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel13.Location = new System.Drawing.Point(33, 3);
+            this.panel13.Name = "panel13";
+            this.panel13.Size = new System.Drawing.Size(920, 559);
+            this.panel13.TabIndex = 0;
+            // 
             // panel15
             // 
             this.panel15.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -770,6 +753,24 @@
             this.panel15.Name = "panel15";
             this.panel15.Size = new System.Drawing.Size(920, 14);
             this.panel15.TabIndex = 2;
+            // 
+            // tpSettings
+            // 
+            this.tpSettings.Location = new System.Drawing.Point(4, 25);
+            this.tpSettings.Name = "tpSettings";
+            this.tpSettings.Size = new System.Drawing.Size(968, 662);
+            this.tpSettings.TabIndex = 1;
+            this.tpSettings.Text = "Podešavanja";
+            this.tpSettings.UseVisualStyleBackColor = true;
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // timer2
+            // 
+            this.timer2.Interval = 250;
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // Sonde
             // 

@@ -50,6 +50,28 @@ namespace Sonde
         List<int> probe3_secondslist = new List<int>();
         List<int> probe4_secondslist = new List<int>();
 
+        List<float> probe1_temperaturelist_saved = new List<float>();
+        List<float> probe2_temperaturelist_saved = new List<float>();
+        List<float> probe3_temperaturelist_saved = new List<float>();
+        List<float> probe4_temperaturelist_saved = new List<float>();
+        List<int> probe1_humiditylist_saved = new List<int>();
+        List<int> probe2_humiditylist_saved = new List<int>();
+        List<int> probe3_humiditylist_saved = new List<int>();
+        List<int> probe4_humiditylist_saved = new List<int>();
+
+        List<int> probe1_hourlist_saved = new List<int>();
+        List<int> probe2_hourlist_saved = new List<int>();
+        List<int> probe3_hourlist_saved = new List<int>();
+        List<int> probe4_hourlist_saved = new List<int>();
+        List<int> probe1_minuteslist_saved = new List<int>();
+        List<int> probe2_minuteslist_saved = new List<int>();
+        List<int> probe3_minuteslist_saved = new List<int>();
+        List<int> probe4_minuteslist_saved = new List<int>();
+        List<int> probe1_secondslist_saved = new List<int>();
+        List<int> probe2_secondslist_saved = new List<int>();
+        List<int> probe3_secondslist_saved = new List<int>();
+        List<int> probe4_secondslist_saved = new List<int>();
+
         float probe1_temperature;
         float probe2_temperature;
         float probe3_temperature;
@@ -86,6 +108,7 @@ namespace Sonde
         string path4;
         string now_or_previous_day;
         string current_directory = Directory.GetCurrentDirectory();
+        string[] probe_txt = {"sonda1.txt", "sonda2.txt", "sonda3.txt", "sonda4.txt" };
 
 
         public void drawCoordinateSystem()
@@ -199,6 +222,59 @@ namespace Sonde
         {
             realTimeDrawGraph = 1;
             drawCoordinateSystem();
+        }
+
+        private void bShowGrapic_Click(object sender, EventArgs e)
+        {
+            string date_string = dateTimePicker1.Value.ToString("dd.MM.yyyy");
+
+            probe1_hourlist_saved.Clear();
+            probe1_minuteslist_saved.Clear();
+            probe1_secondslist_saved.Clear();
+            probe1_temperaturelist_saved.Clear();
+            probe1_humiditylist_saved.Clear();
+
+            probe2_hourlist_saved.Clear();
+            probe2_minuteslist_saved.Clear();
+            probe2_secondslist_saved.Clear();
+            probe2_temperaturelist_saved.Clear();
+            probe2_humiditylist_saved.Clear();
+
+            probe3_hourlist_saved.Clear();
+            probe3_minuteslist_saved.Clear();
+            probe3_secondslist_saved.Clear();
+            probe3_temperaturelist_saved.Clear();
+            probe3_humiditylist_saved.Clear();
+
+            probe4_hourlist_saved.Clear();
+            probe4_minuteslist_saved.Clear();
+            probe4_secondslist_saved.Clear();
+            probe4_temperaturelist_saved.Clear();
+            probe4_humiditylist_saved.Clear();
+
+            probe1_hourlist_saved = filework.takeHour(current_directory, date_string, probe_txt[0]);
+            probe1_minuteslist_saved = filework.takeMinutes(current_directory, date_string, probe_txt[0]);
+            probe1_secondslist_saved = filework.takeSeconds(current_directory, date_string, probe_txt[0]);
+            probe1_temperaturelist_saved = filework.takeTemperature(current_directory, date_string, probe_txt[0]);
+            probe1_humiditylist_saved = filework.takeHumidity(current_directory, date_string, probe_txt[0]);
+
+            probe2_hourlist_saved = filework.takeHour(current_directory, date_string, probe_txt[1]);
+            probe2_minuteslist_saved = filework.takeMinutes(current_directory, date_string, probe_txt[1]);
+            probe2_secondslist_saved = filework.takeSeconds(current_directory, date_string, probe_txt[1]);
+            probe2_temperaturelist_saved = filework.takeTemperature(current_directory, date_string, probe_txt[1]);
+            probe2_humiditylist_saved = filework.takeHumidity(current_directory, date_string, probe_txt[1]);
+
+            probe3_hourlist_saved = filework.takeHour(current_directory, date_string, probe_txt[2]);
+            probe3_minuteslist_saved = filework.takeMinutes(current_directory, date_string, probe_txt[2]);
+            probe3_secondslist_saved = filework.takeSeconds(current_directory, date_string, probe_txt[2]);
+            probe3_temperaturelist_saved = filework.takeTemperature(current_directory, date_string, probe_txt[2]);
+            probe3_humiditylist_saved = filework.takeHumidity(current_directory, date_string, probe_txt[2]);
+
+            probe4_hourlist_saved = filework.takeHour(current_directory, date_string, probe_txt[3]);
+            probe4_minuteslist_saved = filework.takeMinutes(current_directory, date_string, probe_txt[3]);
+            probe4_secondslist_saved = filework.takeSeconds(current_directory, date_string, probe_txt[3]);
+            probe4_temperaturelist_saved = filework.takeTemperature(current_directory, date_string, probe_txt[3]);
+            probe4_humiditylist_saved = filework.takeHumidity(current_directory, date_string, probe_txt[3]);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
