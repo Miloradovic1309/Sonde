@@ -72,6 +72,8 @@ namespace Sonde
         List<int> probe3_secondslist_saved = new List<int>();
         List<int> probe4_secondslist_saved = new List<int>();
 
+        string message_port = "Došlo je do greške.";
+
         float probe1_temperature;
         float probe2_temperature;
         float probe3_temperature;
@@ -97,8 +99,12 @@ namespace Sonde
         int realTimeDrawGraph;
         int add_values_to_list;
 
-        int separate_width = 24;
-        int separate_height = 10;
+        int separate_width;
+        int separate_height;
+        int separate_width_s;
+        int separate_height_s;
+        int time_from;
+        int time_to;
 
         System.IO.StreamWriter fileW;
         string folder;
@@ -109,6 +115,7 @@ namespace Sonde
         string now_or_previous_day;
         string current_directory = Directory.GetCurrentDirectory();
         string[] probe_txt = {"sonda1.txt", "sonda2.txt", "sonda3.txt", "sonda4.txt" };
+        string[] probe_chose = { "Sonda 1", "Sonda 2", "Sonda 3", "Sonda 4" };
 
 
         public void drawCoordinateSystem()
@@ -146,6 +153,31 @@ namespace Sonde
             draw.drawNumbersX(g12, panel12.Width, separate_width);
         }
 
+        public void drawCoordinateSystem2(int separate_width_s, int time_from, int time_to)
+        {
+            Graphics gg1 = panel13.CreateGraphics();
+            Graphics gg2 = panel14.CreateGraphics();
+            Graphics gg3 = panel15.CreateGraphics();
+            gg1.Clear(Color.FloralWhite);
+            gg2.Clear(Color.FloralWhite);
+            gg3.Clear(Color.FloralWhite);
+
+            
+            if (separate_width_s == 24)
+            {
+                draw.drawCoordiantes(gg1, panel13.Height, panel13.Width, separate_width_s, separate_height);
+                draw.drawNumbersY(gg2, panel14.Height, separate_height);
+                draw.drawNumbersX(gg3, panel15.Width, separate_width_s);
+            }
+            else
+            {
+                draw.drawCoordiantes(gg1, panel13.Height, panel13.Width, separate_width_s, separate_height);
+                draw.drawNumbersYC(gg2, panel14.Height, separate_height);
+                draw.drawNumbersXC(gg3, panel15.Width, separate_width_s, time_from, time_to);
+            }
+            
+        }
+
         public Sonde()
         {
             InitializeComponent();
@@ -163,13 +195,36 @@ namespace Sonde
 
         private void Sonde_Load(object sender, EventArgs e)
         {
+            separate_width = 24;
+            separate_height = 10;
+
             for (int i = 1; i <= number_of_ports; i++)
             {
                 cbPort.Items.Add("COM" + Convert.ToString(i));
             }
+            for(int i=0; i < 4; i++)
+            {
+                cbChoseGraphic.Items.Add(probe_chose[i]);
+            }
+            for(int i=0; i<25; i++)
+            {
+                cbFrom.Items.Add(Convert.ToString(i));
+                cbTo.Items.Add(Convert.ToString(i));
+            }
+            cbFrom.Text = "0";
+            cbTo.Text = "24";
+
+            cbPort.Text = Properties.Settings.Default.comPortName;
+
             dateTimePicker1.Format = DateTimePickerFormat.Custom;
             dateTimePicker1.CustomFormat = "dd.MM.yyyy";
             dateTimePicker1.Value = new DateTime(dt.Year, dt.Month, dt.Day);
+            dateTimePicker2.Format = DateTimePickerFormat.Custom;
+            dateTimePicker2.CustomFormat = "dd.MM.yyyy";
+            dateTimePicker2.Value = new DateTime(dt.Year, dt.Month, dt.Day);
+
+            cbTemperature.Checked = true;
+            cbHumidity.Checked = true;
 
             timer1.Start();
             timer2.Start();
@@ -214,7 +269,7 @@ namespace Sonde
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Došlo je do greške.");
+                MessageBox.Show(message_port);
             }
         }
 
@@ -275,7 +330,318 @@ namespace Sonde
             probe4_secondslist_saved = filework.takeSeconds(current_directory, date_string, probe_txt[3]);
             probe4_temperaturelist_saved = filework.takeTemperature(current_directory, date_string, probe_txt[3]);
             probe4_humiditylist_saved = filework.takeHumidity(current_directory, date_string, probe_txt[3]);
+
+            drawCoordinateSystem();
+            Pen pt1 = new Pen(Color.Red, 1.5f);
+            Pen ph1 = new Pen(Color.Green, 1f);
+            Pen pt2 = new Pen(Color.Red, 1.5f);
+            Pen ph2 = new Pen(Color.Green, 1f);
+            Pen pt3 = new Pen(Color.Red, 1.5f);
+            Pen ph3 = new Pen(Color.Green, 1f);
+            Pen pt4 = new Pen(Color.Red, 1.5f);
+            Pen ph4 = new Pen(Color.Green, 1f);
+            Graphics gr1 = panel1.CreateGraphics();
+            Graphics gr2 = panel2.CreateGraphics();
+            Graphics gr3 = panel3.CreateGraphics();
+            Graphics gr4 = panel4.CreateGraphics();
+
+            for (int i = 1; i < probe1_temperaturelist_saved.Count; i++)
+            {
+                draw.drawingGraphsTemperatureSaved(probe1_temperaturelist_saved, probe1_hourlist_saved,
+                                probe1_minuteslist_saved, probe1_secondslist_saved, pt1, gr1, panel1.Height, panel1.Width,
+                                separate_width, separate_height, i);
+            }
+            for (int i = 1; i < probe1_humiditylist_saved.Count; i++)
+            {
+                draw.drawingGraphsHumuditySaved(probe1_humiditylist_saved, probe1_hourlist_saved,
+                           probe1_minuteslist_saved, probe1_secondslist_saved, ph1, gr1, panel1.Height, panel1.Width,
+                           separate_width, separate_height, i);
+            }
+
+            for (int i = 1; i < probe2_temperaturelist_saved.Count; i++)
+            {
+                draw.drawingGraphsTemperatureSaved(probe2_temperaturelist_saved, probe2_hourlist_saved,
+                                probe2_minuteslist_saved, probe2_secondslist_saved, pt2, gr2, panel2.Height, panel2.Width,
+                                separate_width, separate_height, i);
+            }
+            for (int i = 1; i < probe2_humiditylist_saved.Count; i++)
+            {
+                draw.drawingGraphsHumuditySaved(probe2_humiditylist_saved, probe2_hourlist_saved,
+                           probe2_minuteslist_saved, probe2_secondslist_saved, ph2, gr2, panel2.Height, panel2.Width,
+                           separate_width, separate_height, i);
+            }
+
+            for (int i = 1; i < probe3_temperaturelist_saved.Count; i++)
+            {
+                draw.drawingGraphsTemperatureSaved(probe3_temperaturelist_saved, probe3_hourlist_saved,
+                                probe3_minuteslist_saved, probe3_secondslist_saved, pt3, gr3, panel3.Height, panel3.Width,
+                                separate_width, separate_height, i);
+            }
+            for (int i = 1; i < probe3_humiditylist_saved.Count; i++)
+            {
+                draw.drawingGraphsHumuditySaved(probe3_humiditylist_saved, probe3_hourlist_saved,
+                           probe3_minuteslist_saved, probe3_secondslist_saved, ph3, gr3, panel3.Height, panel3.Width,
+                           separate_width, separate_height, i);
+            }
+
+            for (int i = 1; i < probe4_temperaturelist_saved.Count; i++)
+            {
+                draw.drawingGraphsTemperatureSaved(probe4_temperaturelist_saved, probe4_hourlist_saved,
+                                probe4_minuteslist_saved, probe4_secondslist_saved, pt4, gr4, panel4.Height, panel4.Width,
+                                separate_width, separate_height, i);
+            }
+            for (int i = 1; i < probe4_humiditylist_saved.Count; i++)
+            {
+                draw.drawingGraphsHumuditySaved(probe4_humiditylist_saved, probe4_hourlist_saved,
+                           probe4_minuteslist_saved, probe4_secondslist_saved, ph4, gr4, panel4.Height, panel4.Width,
+                           separate_width, separate_height, i);
+            }
         }
+
+        private void bDraw_Click(object sender, EventArgs e)
+        {
+            string date_string = dateTimePicker2.Value.ToString("dd.MM.yyyy.");
+
+            separate_height_s = 10;
+            time_from = int.Parse(cbFrom.Text);
+            time_to = int.Parse(cbTo.Text);
+
+            if (time_to - time_from > 0)
+            {
+                separate_width_s = time_to - time_from;
+            }
+            else
+            {
+                cbFrom.Text = "0";
+                cbTo.Text = "24";
+                separate_width_s = 24;
+            }
+                       
+            drawCoordinateSystem2(separate_width_s, time_from, time_to);
+            Pen pt = new Pen(Color.Red, 1.5f);
+            Pen ph = new Pen(Color.Green, 1f);
+            Graphics gg = panel13.CreateGraphics();
+
+            try
+            {
+
+                if (cbChoseGraphic.Text == probe_chose[0])
+                {
+                    probe1_hourlist_saved.Clear();
+                    probe1_minuteslist_saved.Clear();
+                    probe1_secondslist_saved.Clear();
+                    probe1_temperaturelist_saved.Clear();
+                    probe1_humiditylist_saved.Clear();
+
+                    probe1_hourlist_saved = filework.takeHour(current_directory, date_string, probe_txt[0]);
+                    probe1_minuteslist_saved = filework.takeMinutes(current_directory, date_string, probe_txt[0]);
+                    probe1_secondslist_saved = filework.takeSeconds(current_directory, date_string, probe_txt[0]);
+                    probe1_temperaturelist_saved = filework.takeTemperature(current_directory, date_string, probe_txt[0]);
+                    probe1_humiditylist_saved = filework.takeHumidity(current_directory, date_string, probe_txt[0]);
+
+                    if (cbTemperature.Checked)
+                    {
+                        for (int i = 1; i < probe1_temperaturelist_saved.Count; i++)
+                        {
+                            if (separate_width_s == 24)
+                            {
+                                draw.drawingGraphsTemperatureSaved(probe1_temperaturelist_saved, probe1_hourlist_saved,
+                                    probe1_minuteslist_saved, probe1_secondslist_saved, pt, gg, panel13.Height, panel13.Width,
+                                    separate_width, separate_height, i);
+                            }
+                            else
+                            {
+                                draw.drawingGraphsTemperatureSavedC(probe1_temperaturelist_saved, probe1_hourlist_saved,
+                                   probe1_minuteslist_saved, probe1_secondslist_saved, pt, gg, panel13.Height, panel13.Width,
+                                   separate_width_s, separate_height, i, time_from, time_to);
+                            }
+                        }
+                    }
+                    if (cbHumidity.Checked)
+                    {
+                        for (int i = 1; i < probe1_humiditylist_saved.Count; i++)
+                        {
+                            if (separate_width_s == 24)
+                            {
+                                draw.drawingGraphsHumuditySaved(probe1_humiditylist_saved, probe1_hourlist_saved,
+                                probe1_minuteslist_saved, probe1_secondslist_saved, ph, gg, panel13.Height, panel13.Width,
+                                separate_width, separate_height, i);
+                            }
+                            else
+                            {
+                                draw.drawingGraphsHumuditySavedC(probe1_humiditylist_saved, probe1_hourlist_saved,
+                                probe1_minuteslist_saved, probe1_secondslist_saved, ph, gg, panel13.Height, panel13.Width,
+                                separate_width_s, separate_height, i, time_from, time_to);
+                            }
+                        }
+                    }
+                }
+
+                else if (cbChoseGraphic.Text == probe_chose[1])
+                {
+                    probe2_hourlist_saved.Clear();
+                    probe2_minuteslist_saved.Clear();
+                    probe2_secondslist_saved.Clear();
+                    probe2_temperaturelist_saved.Clear();
+                    probe2_humiditylist_saved.Clear();
+
+                    probe2_hourlist_saved = filework.takeHour(current_directory, date_string, probe_txt[1]);
+                    probe2_minuteslist_saved = filework.takeMinutes(current_directory, date_string, probe_txt[1]);
+                    probe2_secondslist_saved = filework.takeSeconds(current_directory, date_string, probe_txt[1]);
+                    probe2_temperaturelist_saved = filework.takeTemperature(current_directory, date_string, probe_txt[1]);
+                    probe2_humiditylist_saved = filework.takeHumidity(current_directory, date_string, probe_txt[1]);
+
+                    if (cbTemperature.Checked)
+                    {
+                        for (int i = 1; i < probe2_temperaturelist_saved.Count; i++)
+                        {
+                            if (separate_width_s == 24)
+                            {
+                                draw.drawingGraphsTemperatureSaved(probe2_temperaturelist_saved, probe2_hourlist_saved,
+                                probe2_minuteslist_saved, probe2_secondslist_saved, pt, gg, panel13.Height, panel13.Width,
+                                separate_width, separate_height, i);
+                            }
+                            else
+                            {
+                                draw.drawingGraphsTemperatureSavedC(probe2_temperaturelist_saved, probe2_hourlist_saved,
+                                probe2_minuteslist_saved, probe2_secondslist_saved, pt, gg, panel13.Height, panel13.Width,
+                                separate_width_s, separate_height, i, time_from, time_to);
+                            }
+                        }
+                    }
+                    if (cbHumidity.Checked)
+                    {
+                        for (int i = 1; i < probe2_humiditylist_saved.Count; i++)
+                        {
+                            if (separate_width_s == 24)
+                            {
+                                draw.drawingGraphsHumuditySaved(probe2_humiditylist_saved, probe2_hourlist_saved,
+                                probe2_minuteslist_saved, probe2_secondslist_saved, ph, gg, panel13.Height, panel13.Width,
+                                separate_width, separate_height, i);
+                            }
+                            else
+                            {
+                                draw.drawingGraphsHumuditySavedC(probe2_humiditylist_saved, probe2_hourlist_saved,
+                                probe2_minuteslist_saved, probe2_secondslist_saved, ph, gg, panel13.Height, panel13.Width,
+                                separate_width_s, separate_height, i, time_from, time_to);
+                            }
+                        }
+                    }
+                }
+
+                else if (cbChoseGraphic.Text == probe_chose[2])
+                {
+                    probe3_hourlist_saved.Clear();
+                    probe3_minuteslist_saved.Clear();
+                    probe3_secondslist_saved.Clear();
+                    probe3_temperaturelist_saved.Clear();
+                    probe3_humiditylist_saved.Clear();
+
+                    probe3_hourlist_saved = filework.takeHour(current_directory, date_string, probe_txt[2]);
+                    probe3_minuteslist_saved = filework.takeMinutes(current_directory, date_string, probe_txt[2]);
+                    probe3_secondslist_saved = filework.takeSeconds(current_directory, date_string, probe_txt[2]);
+                    probe3_temperaturelist_saved = filework.takeTemperature(current_directory, date_string, probe_txt[2]);
+                    probe3_humiditylist_saved = filework.takeHumidity(current_directory, date_string, probe_txt[2]);
+
+                    if (cbTemperature.Checked)
+                    {
+                        for (int i = 1; i < probe3_temperaturelist_saved.Count; i++)
+                        {
+                            if (separate_width_s == 24)
+                            {
+                                draw.drawingGraphsTemperatureSaved(probe3_temperaturelist_saved, probe3_hourlist_saved,
+                                probe3_minuteslist_saved, probe3_secondslist_saved, pt, gg, panel13.Height, panel13.Width,
+                                separate_width, separate_height, i);
+                            }
+                            else
+                            {
+                                draw.drawingGraphsTemperatureSavedC(probe3_temperaturelist_saved, probe3_hourlist_saved,
+                                probe3_minuteslist_saved, probe3_secondslist_saved, pt, gg, panel13.Height, panel13.Width,
+                                separate_width_s, separate_height, i, time_from, time_to);
+                            }
+                        }
+                    }
+                    if (cbHumidity.Checked)
+                    {
+                        for (int i = 1; i < probe3_humiditylist_saved.Count; i++)
+                        {
+                            if (separate_width_s == 24)
+                            {
+                                draw.drawingGraphsHumuditySaved(probe3_humiditylist_saved, probe3_hourlist_saved,
+                                probe3_minuteslist_saved, probe3_secondslist_saved, ph, gg, panel13.Height, panel13.Width,
+                                separate_width, separate_height, i);
+                            }
+                            else
+                            {
+                                draw.drawingGraphsHumuditySavedC(probe3_humiditylist_saved, probe3_hourlist_saved,
+                                probe3_minuteslist_saved, probe3_secondslist_saved, ph, gg, panel13.Height, panel13.Width,
+                                separate_width_s, separate_height, i, time_from, time_to);
+                            }
+                        }
+                    }
+                }
+
+                else if (cbChoseGraphic.Text == probe_chose[3])
+                {
+                    probe4_hourlist_saved.Clear();
+                    probe4_minuteslist_saved.Clear();
+                    probe4_secondslist_saved.Clear();
+                    probe4_temperaturelist_saved.Clear();
+                    probe4_humiditylist_saved.Clear();
+
+                    probe4_hourlist_saved = filework.takeHour(current_directory, date_string, probe_txt[3]);
+                    probe4_minuteslist_saved = filework.takeMinutes(current_directory, date_string, probe_txt[3]);
+                    probe4_secondslist_saved = filework.takeSeconds(current_directory, date_string, probe_txt[3]);
+                    probe4_temperaturelist_saved = filework.takeTemperature(current_directory, date_string, probe_txt[3]);
+                    probe4_humiditylist_saved = filework.takeHumidity(current_directory, date_string, probe_txt[3]);
+
+                    if (cbTemperature.Checked)
+                    {
+                        for (int i = 1; i < probe4_temperaturelist_saved.Count; i++)
+                        {
+                            if (separate_width_s == 24)
+                            {
+                                draw.drawingGraphsTemperatureSaved(probe4_temperaturelist_saved, probe4_hourlist_saved,
+                                probe4_minuteslist_saved, probe4_secondslist_saved, pt, gg, panel13.Height, panel13.Width,
+                                separate_width, separate_height, i);
+                            }
+                            else
+                            {
+                                draw.drawingGraphsTemperatureSavedC(probe4_temperaturelist_saved, probe4_hourlist_saved,
+                                probe4_minuteslist_saved, probe4_secondslist_saved, pt, gg, panel13.Height, panel13.Width,
+                                separate_width_s, separate_height, i, time_from, time_to);
+                            }
+                        }
+                    }
+                    if (cbHumidity.Checked)
+                    {
+                        for (int i = 1; i < probe4_humiditylist_saved.Count; i++)
+                        {
+                            if (separate_width_s == 24)
+                            {
+                                draw.drawingGraphsHumuditySaved(probe4_humiditylist_saved, probe4_hourlist_saved,
+                                probe4_minuteslist_saved, probe4_secondslist_saved, ph, gg, panel13.Height, panel13.Width,
+                                separate_width, separate_height, i);
+                            }
+                            else
+                            {
+                                draw.drawingGraphsHumuditySavedC(probe4_humiditylist_saved, probe4_hourlist_saved,
+                                probe4_minuteslist_saved, probe4_secondslist_saved, ph, gg, panel13.Height, panel13.Width,
+                                separate_width_s, separate_height, i, time_from, time_to);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ne postoje podaci za izabranu sondu");
+            }
+            
+
+        }
+
+
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -518,6 +884,20 @@ namespace Sonde
 
         }
 
-        
+        private void Sonde_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.comPortName = cbPort.Text;
+            Properties.Settings.Default.Save();
+        }
+
+        private void Sonde_ResizeEnd(object sender, EventArgs e)
+        {
+            drawCoordinateSystem();
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            drawCoordinateSystem();
+        }
     }
 }
